@@ -1,0 +1,2201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Awaaz Setu | AI Platform for Digital Public Infrastructure & Governance</title>
+  <!-- Leaflet CSS for India Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-dark: #172554;
+      --primary-light: #3b82f6;
+      --accent: #f97316;
+      --accent-hover: #ea580c;
+      --success: #15803d;
+      --warning: #b45309;
+      --danger: #b91c1c;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --border-focus: #94a3b8;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 40px;
+    }
+
+    /* Header & Branding */
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: white;
+      padding: 16px 24px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      background: var(--accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 22px;
+      color: white;
+      box-shadow: 0 2px 8px rgba(249, 115, 22, 0.4);
+    }
+
+    .brand-title h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-title p {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    .track-badge {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 9999px;
+      padding: 6px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f1f5f9;
+    }
+
+    .ai-status-indicator {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    /* Sub-header Banner & Paradigm Shift Callout */
+    .banner-container {
+      max-width: 1400px;
+      margin: 16px auto 0 auto;
+      padding: 0 20px;
+    }
+
+    .paradigm-banner {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      padding: 12px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.88rem;
+    }
+
+    .paradigm-text {
+      color: #1e40af;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .paradigm-text strong {
+      color: #1e3a8a;
+    }
+
+    .disclaimer-pill {
+      font-size: 0.75rem;
+      background: #ffffff;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    /* Main Layout */
+    .main-container {
+      max-width: 1400px;
+      margin: 16px auto 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 430px 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 1024px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Card Panels */
+    .panel-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .panel-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Citizen Input Panel */
+    .input-form-group {
+      margin-bottom: 14px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .lang-selector-group {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .lang-chip {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .lang-chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      font-weight: 600;
+    }
+
+    .quick-sample-chips {
+      margin-bottom: 14px;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .sample-title {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .sample-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .sample-btn {
+      background: white;
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      text-align: left;
+      cursor: pointer;
+      line-height: 1.25;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sample-btn strong {
+      color: var(--primary);
+      font-size: 0.75rem;
+    }
+
+    .sample-btn span {
+      color: var(--text-muted);
+      font-size: 0.70rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sample-btn:hover {
+      border-color: var(--primary-light);
+      background: #eff6ff;
+    }
+
+    .textarea-wrapper {
+      position: relative;
+    }
+
+    .citizen-textarea {
+      width: 100%;
+      min-height: 105px;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      color: var(--text);
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+
+    .citizen-textarea:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+
+    .mic-button-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .speak-btn {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .speak-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .speak-btn.recording {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #b91c1c;
+      animation: pulse-red 1.2s infinite;
+    }
+
+    @keyframes pulse-red {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    .submit-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .submit-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    /* Analysis Result Card */
+    .analysis-feedback-card {
+      margin-top: 14px;
+      padding: 14px;
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .analysis-feedback-card.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .analysis-feedback-card.highlight {
+      background: #f0fdf4;
+      border-color: #86efac;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .badge-pill {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-high { background: #fee2e2; color: #991b1b; }
+    .badge-medium { background: #fef3c7; color: #92400e; }
+    .badge-low { background: #dcfce7; color: #166534; }
+
+    .cluster-banner {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: #1e40af;
+    }
+
+    /* Right Column: Map & Federation */
+    .map-controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .toggle-group {
+      display: flex;
+      background: #e2e8f0;
+      padding: 3px;
+      border-radius: 8px;
+      gap: 2px;
+    }
+
+    .toggle-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .toggle-btn.active {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    }
+
+    #india-map {
+      height: 440px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      z-index: 1;
+    }
+
+    /* Map Legend */
+    .map-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: #e53e3e; }
+    .dot-amber { background: #dd6b20; }
+    .dot-green { background: #38a169; }
+
+    /* Federated Comparison Card */
+    .federated-comparison-box {
+      margin-top: 14px;
+      background: #faf5ff;
+      border: 1px solid #e9d5ff;
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: none;
+    }
+
+    .federated-comparison-box.active {
+      display: block;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .comparison-col {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 0.82rem;
+    }
+
+    /* Ranked Projects Section */
+    .ranked-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .project-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .project-card:hover {
+      border-color: var(--primary-light);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .project-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .project-rank-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .rank-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .rank-circle.rank-1 { background: #dc2626; }
+    .rank-circle.rank-2 { background: #ea580c; }
+    .rank-circle.rank-3 { background: #d97706; }
+
+    .project-title-text {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .project-state-tag {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .project-score-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .score-value {
+      font-size: 1.25rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .score-high { color: #dc2626; }
+    .score-med { color: #d97706; }
+    .score-low { color: #16a34a; }
+
+    .score-label {
+      font-size: 0.70rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .project-metrics-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin: 10px 0;
+      background: #f8fafc;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.78rem;
+    }
+
+    .metric-item strong {
+      display: block;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .project-why-text {
+      font-size: 0.84rem;
+      color: #334155;
+      margin-bottom: 12px;
+      line-height: 1.4;
+      background: #f1f5f9;
+      border-left: 3px solid var(--primary-light);
+      padding: 6px 10px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .project-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .cluster-preview-text {
+      font-size: 0.76rem;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .brief-trigger-btn {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+    }
+
+    .brief-trigger-btn:hover {
+      box-shadow: 0 4px 8px rgba(37, 99, 235, 0.35);
+      transform: translateY(-1px);
+    }
+
+    /* Modal for Policy Brief */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background: white;
+      border-radius: 12px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--border);
+      animation: modalScale 0.2s ease-out;
+    }
+
+    @keyframes modalScale {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      padding: 16px 22px;
+      background: #0f172a;
+      color: white;
+      border-radius: 12px 12px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .modal-close-btn:hover {
+      color: white;
+    }
+
+    .modal-body {
+      padding: 22px;
+    }
+
+    .memo-paper {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 20px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #1e293b;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background-image: linear-gradient(#f8fafc 1px, transparent 1px);
+      background-size: 100% 24px;
+    }
+
+    .memo-loading-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--primary-light);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 14px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .modal-footer {
+      padding: 14px 22px;
+      background: #f8fafc;
+      border-top: 1px solid var(--border);
+      border-radius: 0 0 12px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .footer-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .secondary-btn {
+      background: white;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      padding: 7px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .secondary-btn:hover {
+      background: #f1f5f9;
+    }
+
+    /* Formula Transparency Modal */
+    .formula-callout-box {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      font-size: 0.82rem;
+      color: #92400e;
+    }
+
+    .formula-badge {
+      font-family: monospace;
+      font-weight: 700;
+      background: #fef3c7;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Toast Notification */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 2000;
+    }
+
+    .toast-msg.show {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header>
+    <div class="header-container">
+      <div class="brand-group">
+        <div class="brand-logo">आ</div>
+        <div class="brand-title">
+          <h1>Awaaz Setu <span style="font-weight: 400; font-size: 1.1rem; opacity: 0.85;">| आवाज़ सेतु</span></h1>
+          <p>AI Citizen Demand Aggregation & Infrastructure Prioritization Engine</p>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <div class="track-badge">
+          <span>Track: AI for Digital Public Infrastructure & Governance</span>
+        </div>
+        <div class="track-badge" id="ai-status-badge" title="Active AI Engine">
+          <span class="ai-status-indicator" id="ai-indicator"></span>
+          <span id="ai-status-text">Gemini 2.5 Flash</span>
+        </div>
+        <button class="secondary-btn" style="background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white;" onclick="openFormulaModal()">
+          ℹ️ Scoring Formula
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Paradigm Shift & Disclaimer Banner -->
+  <div class="banner-container">
+    <div class="paradigm-banner">
+      <div class="paradigm-text">
+        <span style="font-size: 1.2rem;">⚖️</span>
+        <div>
+          <strong>DPI Paradigm Shift:</strong> Grievance portals log isolated tickets for bureaucratic handling.
+          <strong>Awaaz Setu</strong> fuses multilingual citizen voice into clustered demand signals, surfacing <em>explainable capital investment recommendations</em>.
+        </div>
+      </div>
+      <div class="disclaimer-pill">
+        📊 Illustrative sample data based on public indicators (Census & NITI Aayog Aspirational Districts framework).
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Grid: Left = Input & Diagnostics | Right = Hotspot Map & Ranked Projects -->
+  <main class="main-container">
+
+    <!-- LEFT COLUMN: Citizen Voice / Multilingual Input Panel -->
+    <section>
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🎙️</span> Citizen Multilingual Voice / Text Input
+          </div>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Step 1 of 4 in DPI Pipeline</span>
+        </div>
+
+        <!-- Language Selector -->
+        <div class="input-form-group">
+          <label class="input-label">
+            <span>Select Citizen Submission Language</span>
+            <span id="speech-support-label" style="font-weight: 400; color: var(--text-muted);">Web Speech API Ready</span>
+          </label>
+          <div class="lang-selector-group" id="lang-chips">
+            <button type="button" class="lang-chip active" data-lang="Hindi" data-locale="hi-IN">हिंदी (Hindi)</button>
+            <button type="button" class="lang-chip" data-lang="Tamil" data-locale="ta-IN">தமிழ் (Tamil)</button>
+            <button type="button" class="lang-chip" data-lang="Bengali" data-locale="bn-IN">বাংলা (Bengali)</button>
+            <button type="button" class="lang-chip" data-lang="Marathi" data-locale="mr-IN">मराठी (Marathi)</button>
+            <button type="button" class="lang-chip" data-lang="English" data-locale="en-IN">English</button>
+          </div>
+        </div>
+
+        <!-- 4 One-Click Non-English Test Samples (For instant judge testing) -->
+        <div class="quick-sample-chips">
+          <div class="sample-title">
+            <span>⚡ One-Click Test Samples (No Mic Needed):</span>
+          </div>
+          <div class="sample-grid">
+            <button type="button" class="sample-btn" onclick="loadSample('hindi')">
+              <strong>🇮🇳 Hindi (Barmer, RJ)</strong>
+              <span>Water crisis & saline handpumps</span>
+            </button>
+            <button type="button" class="sample-btn" onclick="loadSample('tamil')">
+              <strong>🇮🇳 Tamil (Ramanathapuram, TN)</strong>
+              <span>Coastal seawater intrusion & wells</span>
+            </button>
+            <button type="button" class="sample-btn" onclick="loadSample('bengali')">
+              <strong>🇮🇳 Bengali (Dhubri, AS)</strong>
+              <span>Salmara clinic & power blackout</span>
+            </button>
+            <button type="button" class="sample-btn" onclick="loadSample('marathi')">
+              <strong>🇮🇳 Marathi (Gadchiroli, MH)</strong>
+              <span>Washed bridge & isolated villages</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Textarea & Mic Action -->
+        <div class="input-form-group">
+          <label class="input-label" for="citizen-text">
+            <span>Citizen Request / Voice Transcript</span>
+            <span id="char-counter" style="color: var(--text-muted); font-size: 0.75rem;">0 characters</span>
+          </label>
+          <div class="textarea-wrapper">
+            <textarea id="citizen-text" class="citizen-textarea" placeholder="Type or click 'Speak' to record your development request in any Indian language..."></textarea>
+          </div>
+          <div class="mic-button-row">
+            <button type="button" class="speak-btn" id="mic-btn" onclick="toggleSpeechRecognition()">
+              <span id="mic-icon">🎤</span>
+              <span id="mic-label">Speak (Voice)</span>
+            </button>
+            <span id="mic-status-hint" style="font-size: 0.74rem; color: var(--text-muted);">
+              Chrome / Edge Web Speech Supported
+            </span>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="button" class="submit-btn" id="submit-analysis-btn" onclick="processCitizenSubmission()">
+          <span id="submit-spinner" style="display: none;" class="spinner"></span>
+          <span id="submit-btn-text">🚀 Run Gemini Pipeline (Classify + Cluster + Re-score)</span>
+        </button>
+
+        <!-- Feedback & Clustering Result Card -->
+        <div class="analysis-feedback-card" id="analysis-feedback">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <div>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">AI Pipeline Output:</span>
+              <h4 id="res-district-sector" style="font-size: 0.95rem; font-weight: 700; color: var(--primary);"></h4>
+            </div>
+            <div id="res-badges" style="display: flex; gap: 4px;">
+              <span class="badge-pill badge-high" id="res-urgency-badge">Urgent</span>
+            </div>
+          </div>
+          <p id="res-translation" style="font-size: 0.82rem; color: #334155; margin-bottom: 6px; font-style: italic;"></p>
+          <div class="cluster-banner" id="res-cluster-msg"></div>
+        </div>
+      </div>
+
+      <!-- District Metrics Quick View -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>📊</span> Pan-India 12-District Coverage
+          </div>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">12 States Represented</span>
+        </div>
+        <div style="font-size: 0.80rem; color: var(--text-muted); margin-bottom: 10px;">
+          Decentralized telemetry aggregates signals from North, South, East, West, Central, and Northeast regions.
+        </div>
+        <div style="max-height: 230px; overflow-y: auto; border: 1px solid var(--border); border-radius: 6px;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left;">
+            <thead style="background: #f1f5f9; position: sticky; top: 0;">
+              <tr>
+                <th style="padding: 6px 10px; border-bottom: 1px solid var(--border);">District, State</th>
+                <th style="padding: 6px 8px; border-bottom: 1px solid var(--border);">Top Deficit</th>
+                <th style="padding: 6px 8px; border-bottom: 1px solid var(--border);">Signals</th>
+                <th style="padding: 6px 8px; border-bottom: 1px solid var(--border);">Action</th>
+              </tr>
+            </thead>
+            <tbody id="district-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: Hotspot Map & Ranked Investment Recommendations -->
+    <section>
+      <!-- Leaflet Map Panel -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🗺️</span> India Infrastructure Demand Hotspots
+          </div>
+          <!-- View Toggle: National vs 2-District Federated Comparison -->
+          <div class="toggle-group">
+            <button class="toggle-btn active" id="view-national" onclick="setMapView('national')">National (12 Districts)</button>
+            <button class="toggle-btn" id="view-arid" onclick="setMapView('arid')">Arid Pair (RJ vs TN)</button>
+            <button class="toggle-btn" id="view-tribal" onclick="setMapView('tribal')">Tribal Pair (CG vs OD)</button>
+          </div>
+        </div>
+
+        <div id="india-map"></div>
+
+        <div class="map-legend">
+          <span>Priority Index:</span>
+          <div class="legend-item"><span class="legend-dot dot-red"></span> High Priority (≥ 70)</div>
+          <div class="legend-item"><span class="legend-dot dot-amber"></span> Medium Priority (45 - 69.9)</div>
+          <div class="legend-item"><span class="legend-dot dot-green"></span> Lower Priority (< 45)</div>
+        </div>
+
+        <!-- Cross-State Federated Pair Comparison Card (Demonstrates Federated Architecture) -->
+        <div class="federated-comparison-box" id="federated-box">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong style="color: #6b21a8; font-size: 0.88rem;">🌐 Federated Cross-State Demand Synthesis</strong>
+            <span style="font-size: 0.72rem; background: #f3e8ff; color: #7e22ce; padding: 2px 8px; border-radius: 4px; font-weight: 600;">Cross-State Pattern Identified</span>
+          </div>
+          <div class="comparison-grid" id="comparison-content">
+            <!-- Dynamically populated based on selected pair -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Top 5 Ranked Projects Panel -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🏆</span> Top 5 Priority Recommendations (Unit of Output)
+          </div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">
+            Real-time multi-criteria ranking • Click brief for IAS memo
+          </span>
+        </div>
+
+        <div class="ranked-list-container" id="ranked-projects-list">
+          <!-- Dynamically populated project cards -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal for Policy Brief (The core hackathon demo feature) -->
+  <div class="modal-overlay" id="brief-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2>
+          <span>📄</span> Official Government Action Brief
+        </h2>
+        <button class="modal-close-btn" onclick="closeBriefModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="brief-loading" class="memo-loading-state" style="display: none;">
+          <div class="spinner"></div>
+          <p><strong>Gemini AI is generating actionable policy brief...</strong></p>
+          <p style="font-size: 0.8rem; margin-top: 4px;">Fusing citizen demand signals, infrastructure deficits, and fiscal benchmarks into a formal bureaucratic memorandum.</p>
+        </div>
+        <div id="brief-content" class="memo-paper"></div>
+      </div>
+      <div class="modal-footer">
+        <span style="font-size: 0.75rem; color: var(--text-muted);" id="brief-ai-provider-badge">
+          Generated via Google Gemini 2.5 Flash
+        </span>
+        <div class="footer-actions">
+          <button class="secondary-btn" onclick="copyBriefText()">📋 Copy Memorandum</button>
+          <button class="secondary-btn" onclick="downloadBriefText()">📥 Download (.txt)</button>
+          <button class="secondary-btn" onclick="printBriefText()">🖨️ Print</button>
+          <button class="secondary-btn" style="background: var(--primary); color: white; border: none;" onclick="closeBriefModal()">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formula Transparency Modal -->
+  <div class="modal-overlay" id="formula-modal">
+    <div class="modal-dialog" style="max-width: 600px;">
+      <div class="modal-header">
+        <h2><span>ℹ️</span> Transparent Priority Scoring Formula</h2>
+        <button class="modal-close-btn" onclick="closeFormulaModal()">&times;</button>
+      </div>
+      <div class="modal-body" style="font-size: 0.88rem; line-height: 1.6;">
+        <div class="formula-callout-box">
+          <strong>Mathematical Objective Function:</strong><br>
+          <span class="formula-badge">Priority Score = 0.50 × V_norm + 0.35 × G_norm + 0.15 × U_norm</span>
+        </div>
+
+        <p style="margin-bottom: 12px;">To guarantee transparency and prevent arbitrary black-box budgeting, Awaaz Setu weighs three objective, verifiable dimensions for every district sector:</p>
+
+        <ul style="padding-left: 20px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 8px;">
+          <li>
+            <strong>1. Normalized Request Volume (50% Weight):</strong><br>
+            Direct citizen participation volume. Raw count of verified, deduplicated citizen voice signals normalized across national percentiles (\(V_{norm} \in [0, 100]\)).
+          </li>
+          <li>
+            <strong>2. Normalized Infrastructure Deficit (35% Weight):</strong><br>
+            Empirical infrastructure readiness index (0–100, where 0 = severe collapse and 100 = full saturation). Gap is \(G = 100 - \text{InfraIndex}\).
+          </li>
+          <li>
+            <strong>3. Normalized Under-Investment (15% Weight):</strong><br>
+            Fiscal gap between benchmark capital needed based on population & deficit vs. currently planned state budget allocation (\(U_{norm} \in [0, 100]\)).
+          </li>
+        </ul>
+
+        <div style="background: #f1f5f9; padding: 10px 14px; border-radius: 6px; font-size: 0.8rem; color: #475569;">
+          <strong>Auditable Governance:</strong> Every ranked recommendation links directly back to raw cluster transcripts, geographic boundary coordinates, and public department allocations.
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content: flex-end;">
+        <button class="secondary-btn" style="background: var(--primary); color: white; border: none;" onclick="closeFormulaModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast-msg">Copied to clipboard!</div>
+
+  <script>
+    /* ==========================================================================
+       AWAAZ SETU CORE DATASET: 12 DISTRICTS ACROSS 12 INDIAN STATES
+       ========================================================================== */
+    const DISTRICTS = [
+      {
+        id: "barmer",
+        name: "Barmer",
+        state: "Rajasthan",
+        region: "West",
+        lat: 25.7532,
+        lng: 71.3967,
+        population: "2.6M",
+        aspirational: true,
+        sectors: {
+          "Water": { infra: 22, requests: 148, plannedInv: 12.5, requiredInv: 28.0, clusterTitle: "Saline Groundwater & Defunct Borewells in Baytoo/Sheo Blocks" },
+          "Roads": { infra: 38, requests: 95, plannedInv: 18.0, requiredInv: 26.0, clusterTitle: "Sand-Drifted Unpaved Link Roads Connecting Border Dhanis" },
+          "Health": { infra: 44, requests: 52, plannedInv: 15.0, requiredInv: 22.0, clusterTitle: "Primary Health Center Ambulatory Delays in Desert Blocks" },
+          "Education": { infra: 50, requests: 41, plannedInv: 14.0, requiredInv: 19.0, clusterTitle: "Staff Quarters Shortage in Border Secondary Schools" },
+          "Electricity": { infra: 62, requests: 34, plannedInv: 20.0, requiredInv: 22.0, clusterTitle: "Agricultural Feeder Voltage Fluctuation" },
+          "Sanitation": { infra: 35, requests: 68, plannedInv: 8.5, requiredInv: 15.0, clusterTitle: "Inadequate Solid Waste Disposal in Mandi Townships" }
+        }
+      },
+      {
+        id: "wayanad",
+        name: "Wayanad",
+        state: "Kerala",
+        region: "South",
+        lat: 11.6854,
+        lng: 76.1320,
+        population: "0.8M",
+        aspirational: true,
+        sectors: {
+          "Roads": { infra: 41, requests: 112, plannedInv: 22.0, requiredInv: 34.0, clusterTitle: "Landslide-Damaged Ghat Road Corridors Along Meppadi-Chooralmala" },
+          "Health": { infra: 36, requests: 88, plannedInv: 16.5, requiredInv: 27.0, clusterTitle: "Lack of Emergency Specialized Trauma Facilities in Tribal Panchayats" },
+          "Water": { infra: 68, requests: 39, plannedInv: 25.0, requiredInv: 28.0, clusterTitle: "Gravity Water Distribution Line Repairs in Highland Tea Estates" },
+          "Education": { infra: 72, requests: 30, plannedInv: 28.0, requiredInv: 29.0, clusterTitle: "Digital Connectivity Gaps in Forest Fringe Schools" },
+          "Electricity": { infra: 75, requests: 22, plannedInv: 24.0, requiredInv: 25.0, clusterTitle: "Tree-Fall Cable Snapping in Monsoon Season" },
+          "Sanitation": { infra: 64, requests: 28, plannedInv: 14.0, requiredInv: 17.0, clusterTitle: "Plastic Recovery Units in Eco-Sensitive Tourism Pockets" }
+        }
+      },
+      {
+        id: "rayagada",
+        name: "Rayagada",
+        state: "Odisha",
+        region: "East",
+        lat: 19.1714,
+        lng: 83.4163,
+        population: "1.0M",
+        aspirational: true,
+        sectors: {
+          "Health": { infra: 28, requests: 135, plannedInv: 11.0, requiredInv: 25.0, clusterTitle: "Severe Medical Staff Shortage & Diagnostic Deficit in Kashipur CHC" },
+          "Water": { infra: 31, requests: 120, plannedInv: 14.0, requiredInv: 24.0, clusterTitle: "Fluoride-Contaminated Groundwater in Gunupur Subdivision" },
+          "Roads": { infra: 42, requests: 76, plannedInv: 19.0, requiredInv: 26.0, clusterTitle: "Unpaved Tribal Ghat Roads Impassable During Monsoon" },
+          "Sanitation": { infra: 33, requests: 82, plannedInv: 7.0, requiredInv: 16.0, clusterTitle: "Dysfunctional Community Toilets in Adivasi Hamlets" },
+          "Education": { infra: 39, requests: 64, plannedInv: 13.5, requiredInv: 20.0, clusterTitle: "Tribal Residential School Laboratory Deficiencies" },
+          "Electricity": { infra: 48, requests: 55, plannedInv: 16.0, requiredInv: 21.0, clusterTitle: "Single-Phase Irregular Supply in Hilltop Settlements" }
+        }
+      },
+      {
+        id: "gadchiroli",
+        name: "Gadchiroli",
+        state: "Maharashtra",
+        region: "West/Central",
+        lat: 20.1809,
+        lng: 80.0000,
+        population: "1.1M",
+        aspirational: true,
+        sectors: {
+          "Electricity": { infra: 25, requests: 142, plannedInv: 10.5, requiredInv: 25.0, clusterTitle: "Burnt Transformers & Chronic 48-Hour Blackouts in Aheri Sub-Division" },
+          "Roads": { infra: 30, requests: 128, plannedInv: 15.0, requiredInv: 29.0, clusterTitle: "Washed-Away Wooden Culverts Cutting Off Bhamragad Forest Villages" },
+          "Health": { infra: 37, requests: 91, plannedInv: 13.0, requiredInv: 22.0, clusterTitle: "Missing Specialized Dialysis & Maternal Care Units" },
+          "Sanitation": { infra: 40, requests: 58, plannedInv: 9.0, requiredInv: 15.0, clusterTitle: "Untreated Drainage Channels Leading into River Streams" },
+          "Education": { infra: 45, requests: 48, plannedInv: 12.0, requiredInv: 17.0, clusterTitle: "High School Science Classrooms Lacking Practical Apparatus" },
+          "Water": { infra: 52, requests: 44, plannedInv: 17.5, requiredInv: 21.0, clusterTitle: "Iron-Contaminated Deep Wells in Forest Ranges" }
+        }
+      },
+      {
+        id: "sitamarhi",
+        name: "Sitamarhi",
+        state: "Bihar",
+        region: "East",
+        lat: 26.5956,
+        lng: 85.4925,
+        population: "3.4M",
+        aspirational: true,
+        sectors: {
+          "Sanitation": { infra: 26, requests: 165, plannedInv: 9.5, requiredInv: 28.0, clusterTitle: "Submerged Community Latrines & Drain Overflow in Flood-Prone Runni Saidpur" },
+          "Roads": { infra: 34, requests: 140, plannedInv: 21.0, requiredInv: 35.0, clusterTitle: "Breached Embankment Roads Disconnecting Rural Agricultural Mandis" },
+          "Health": { infra: 38, requests: 104, plannedInv: 18.0, requiredInv: 30.0, clusterTitle: "Kala-azar Prevention Deficits & Sub-Center Vaccine Cold Chains" },
+          "Education": { infra: 42, requests: 88, plannedInv: 16.0, requiredInv: 25.0, clusterTitle: "Dilapidated Primary School Roofs Leaking in Rain" },
+          "Water": { infra: 46, requests: 75, plannedInv: 20.0, requiredInv: 26.0, clusterTitle: "Turbid Flood-Water Infiltration into Shallow Handpumps" },
+          "Electricity": { infra: 58, requests: 40, plannedInv: 22.0, requiredInv: 25.0, clusterTitle: "Sub-Station Overheating During Summer Peak Loads" }
+        }
+      },
+      {
+        id: "chamba",
+        name: "Chamba",
+        state: "Himachal Pradesh",
+        region: "North",
+        lat: 32.5534,
+        lng: 76.1258,
+        population: "0.5M",
+        aspirational: true,
+        sectors: {
+          "Education": { infra: 32, requests: 98, plannedInv: 8.0, requiredInv: 19.0, clusterTitle: "Unheated Dilapidated Classrooms & Absence of Science Labs in Tissa" },
+          "Health": { infra: 35, requests: 89, plannedInv: 9.5, requiredInv: 20.0, clusterTitle: "Sub-Zero Winter Isolation of Remote Health Sub-Centers in Pangi Valley" },
+          "Roads": { infra: 39, requests: 84, plannedInv: 14.0, requiredInv: 22.0, clusterTitle: "Snowbound Passes Disconnecting Valley Hamlets for 4 Months" },
+          "Electricity": { infra: 49, requests: 42, plannedInv: 11.0, requiredInv: 15.0, clusterTitle: "Winter Transmission Line Snags & Freezing Insulators" },
+          "Sanitation": { infra: 54, requests: 29, plannedInv: 6.5, requiredInv: 10.0, clusterTitle: "Freezing Night Septic Tank Malfunctions in High Altitudes" },
+          "Water": { infra: 56, requests: 37, plannedInv: 13.0, requiredInv: 16.0, clusterTitle: "Frozen Gravity Tap Pipelines in Upper Churah" }
+        }
+      },
+      {
+        id: "dhubri",
+        name: "Dhubri",
+        state: "Assam",
+        region: "Northeast",
+        lat: 26.0207,
+        lng: 89.9740,
+        population: "1.9M",
+        aspirational: true,
+        sectors: {
+          "Health": { infra: 24, requests: 155, plannedInv: 10.0, requiredInv: 27.0, clusterTitle: "South Salmara Char PHC Vacancies and Missing Solar Refrigeration" },
+          "Education": { infra: 29, requests: 132, plannedInv: 11.5, requiredInv: 24.0, clusterTitle: "Erosion-Threatened River Island Schools Lacking Flood Resilient Classrooms" },
+          "Sanitation": { infra: 30, requests: 96, plannedInv: 8.0, requiredInv: 17.0, clusterTitle: "River Island Flood Contamination of Open Pit Latrines" },
+          "Roads": { infra: 33, requests: 110, plannedInv: 17.0, requiredInv: 28.0, clusterTitle: "Eroded Riverine Approach Jetties Disconnecting Boat Terminals" },
+          "Water": { infra: 41, requests: 65, plannedInv: 15.0, requiredInv: 21.0, clusterTitle: "Arsenic Hotspots in Shallow Alluvial Aquifers" },
+          "Electricity": { infra: 44, requests: 72, plannedInv: 13.0, requiredInv: 18.0, clusterTitle: "Submerged River Crossing Distribution Cables" }
+        }
+      },
+      {
+        id: "dantewada",
+        name: "Dantewada",
+        state: "Chhattisgarh",
+        region: "Central",
+        lat: 18.8953,
+        lng: 81.3508,
+        population: "0.5M",
+        aspirational: true,
+        sectors: {
+          "Roads": { infra: 27, requests: 138, plannedInv: 14.5, requiredInv: 30.0, clusterTitle: "Unpaved Dirt Tracks Blocking Tribal Weekly Access to Katekalyan Medical Hubs" },
+          "Electricity": { infra: 30, requests: 115, plannedInv: 9.0, requiredInv: 21.0, clusterTitle: "Dysfunctional Solar Mini-Grids in Forest-Border Hamlets of Kuakonda" },
+          "Health": { infra: 34, requests: 87, plannedInv: 12.0, requiredInv: 20.0, clusterTitle: "Lack of Emergency Blood Storage & Antivenom Centers" },
+          "Sanitation": { infra: 36, requests: 62, plannedInv: 7.5, requiredInv: 14.0, clusterTitle: "Dysfunctional Community Wash Complexes in Residential Ashrams" },
+          "Education": { infra: 38, requests: 79, plannedInv: 11.0, requiredInv: 18.0, clusterTitle: "Missing Digital Science Labs in Adivasi Livelihood Colleges" },
+          "Water": { infra: 48, requests: 51, plannedInv: 14.0, requiredInv: 19.0, clusterTitle: "Heavy Iron Particle Suspensions in Borewell Waters" }
+        }
+      },
+      {
+        id: "ramanathapuram",
+        name: "Ramanathapuram",
+        state: "Tamil Nadu",
+        region: "South",
+        lat: 9.3639,
+        lng: 78.8395,
+        population: "1.4M",
+        aspirational: true,
+        sectors: {
+          "Water": { infra: 23, requests: 152, plannedInv: 13.0, requiredInv: 31.0, clusterTitle: "Saline Ingress Into Domestic Supply Wells in Coastal Tiruvadanai" },
+          "Sanitation": { infra: 31, requests: 105, plannedInv: 10.0, requiredInv: 20.0, clusterTitle: "High Water Table Septic Overflows in Rameswaram Periphery Settlements" },
+          "Health": { infra: 51, requests: 46, plannedInv: 20.0, requiredInv: 25.0, clusterTitle: "Primary Health Center Dental & Ophthalmological Gaps" },
+          "Roads": { infra: 55, requests: 50, plannedInv: 24.0, requiredInv: 27.0, clusterTitle: "Coastal Salt-Spray Corrosion of Bridge Expansion Joints" },
+          "Education": { infra: 58, requests: 38, plannedInv: 22.0, requiredInv: 24.0, clusterTitle: "Marine Biology Field Labs Deficit in Coastal Colleges" },
+          "Electricity": { infra: 67, requests: 29, plannedInv: 25.0, requiredInv: 26.0, clusterTitle: "High-Salinity Coastal Line Arcing and Sparking" }
+        }
+      },
+      {
+        id: "raichur",
+        name: "Raichur",
+        state: "Karnataka",
+        region: "South",
+        lat: 16.2076,
+        lng: 77.3463,
+        population: "1.9M",
+        aspirational: true,
+        sectors: {
+          "Water": { infra: 29, requests: 124, plannedInv: 15.0, requiredInv: 28.0, clusterTitle: "Tail-End Canal Dehydration & Dry Borewells in Manvi/Sindhanur Taluks" },
+          "Education": { infra: 35, requests: 102, plannedInv: 12.0, requiredInv: 23.0, clusterTitle: "High Secondary Dropout Rates & Missing Functional Girls Toilets" },
+          "Sanitation": { infra: 41, requests: 63, plannedInv: 9.5, requiredInv: 17.0, clusterTitle: "Open Sewage Drains Near Grain Storage Mandis" },
+          "Health": { infra: 43, requests: 70, plannedInv: 16.5, requiredInv: 24.0, clusterTitle: "Thermal Power Plant Dust Respiratory Clinic Deficit" },
+          "Roads": { infra: 47, requests: 68, plannedInv: 20.0, requiredInv: 25.0, clusterTitle: "Overloaded Ore Truck Damage on State Highways" },
+          "Electricity": { infra: 60, requests: 35, plannedInv: 22.0, requiredInv: 24.0, clusterTitle: "Irrigation Pump Feeder Trip Delays" }
+        }
+      },
+      {
+        id: "bahraich",
+        name: "Bahraich",
+        state: "Uttar Pradesh",
+        region: "North",
+        lat: 27.5750,
+        lng: 81.5975,
+        population: "3.5M",
+        aspirational: true,
+        sectors: {
+          "Health": { infra: 25, requests: 168, plannedInv: 14.0, requiredInv: 36.0, clusterTitle: "Sub-Center Maternal Deficiencies & Encephalitis Surge in Mihipurwa" },
+          "Sanitation": { infra: 28, requests: 145, plannedInv: 11.0, requiredInv: 27.0, clusterTitle: "Stagnant Flood Drainage & Untreated Waste Contamination in Mahsi Block" },
+          "Education": { infra: 33, requests: 110, plannedInv: 15.0, requiredInv: 28.0, clusterTitle: "Dilapidated Border Area Kasturba Gandhi Balika Vidyalayas" },
+          "Roads": { infra: 36, requests: 118, plannedInv: 23.0, requiredInv: 34.0, clusterTitle: "Submerged Terai Causeway Crossings During Ghaghra Floods" },
+          "Water": { infra: 45, requests: 70, plannedInv: 18.0, requiredInv: 25.0, clusterTitle: "Surface Siltation of Rural Piped Water Filtration Units" },
+          "Electricity": { infra: 52, requests: 54, plannedInv: 19.0, requiredInv: 24.0, clusterTitle: "Flooded Transformer Platforms in Low-Lying Terai Villages" }
+        }
+      },
+      {
+        id: "namsai",
+        name: "Namsai",
+        state: "Arunachal Pradesh",
+        region: "Northeast",
+        lat: 27.6710,
+        lng: 95.8680,
+        population: "0.1M",
+        aspirational: true,
+        sectors: {
+          "Electricity": { infra: 27, requests: 88, plannedInv: 6.0, requiredInv: 16.0, clusterTitle: "Transmission Line Collapse Isolating Lekang Circle During Monsoon Storms" },
+          "Health": { infra: 32, requests: 79, plannedInv: 7.5, requiredInv: 15.0, clusterTitle: "Sub-Divisional Hospital Lacking Dedicated Blood Storage & Vaccine Cold Chain" },
+          "Roads": { infra: 35, requests: 74, plannedInv: 12.0, requiredInv: 19.0, clusterTitle: "Noa-Dihing River Erosion Breaching Border Link Road" },
+          "Education": { infra: 40, requests: 49, plannedInv: 8.0, requiredInv: 13.0, clusterTitle: "Dilapidated Bamboo Classrooms in River Island Settlements" },
+          "Water": { infra: 44, requests: 45, plannedInv: 8.5, requiredInv: 12.0, clusterTitle: "Turbid River Water Contamination of Gravity Intake Systems" },
+          "Sanitation": { infra: 46, requests: 38, plannedInv: 5.0, requiredInv: 9.0, clusterTitle: "Absence of Solid Waste Composting Units in Township" }
+        }
+      }
+    ];
+
+    /* Sample Requests for Instant Judge Testing */
+    const SAMPLES = {
+      hindi: {
+        lang: "Hindi",
+        locale: "hi-IN",
+        districtHint: "Barmer",
+        text: "हमारे बाड़मेर के बायतू गांव में पिछले दो महीने से पीने का पानी नहीं आ रहा है, हैंडपंप खारा हो चुका है और टैंकर के लिए ₹1500 देने पड़ रहे हैं। कृपया तुरंत नई पाइपलाइन मंजूर करें।"
+      },
+      tamil: {
+        lang: "Tamil",
+        locale: "ta-IN",
+        districtHint: "Ramanathapuram",
+        text: "ராமநாதபுரம் திருவாடானை பகுதியில் கடல்நீர் உட்புகுந்து குடிநீர் உப்புநீராக மாறியுள்ளது. புதிய குடிநீர் சுத்திகரிப்பு ஆலை மற்றும் குழாய் இணைப்பு உடனடியாக தேவைப்படுகிறது."
+      },
+      bengali: {
+        lang: "Bengali",
+        locale: "bn-IN",
+        districtHint: "Dhubri",
+        text: "ধুবড়ী জেলার শালমারা ব্লকে প্রাথমিক স্বাস্থ্যকেন্দ্রে কোনো ডাক্তার নেই এবং বিদ্যুৎ না থাকায় রাতে জরুরি প্রসবের ব্যবস্থা ভেঙে পড়েছে। অতিসত্বর বিদ্যুৎ ও স্বাস্থ্যকর্মী দিন।"
+      },
+      marathi: {
+        lang: "Marathi",
+        locale: "mr-IN",
+        districtHint: "Gadchiroli",
+        text: "गडचिरोली जिल्ह्यातील भामरागड तालुक्यात मुख्य रस्त्यावर पूल वाहून गेल्यामुळे ५ गावे संपर्कहीन झाली आहेत. रुग्णवाहिका गावात येऊ शकत नाही, त्वरित पक्का रस्ता आणि पूल हवा."
+      }
+    };
+
+    /* Sector Emoji Mapping */
+    const SECTOR_ICONS = {
+      Water: "💧",
+      Roads: "🛣️",
+      Health: "🏥",
+      Education: "🏫",
+      Electricity: "⚡",
+      Sanitation: "🚻"
+    };
+
+    let selectedLanguage = "Hindi";
+    let selectedLocale = "hi-IN";
+    let mapInstance = null;
+    let districtMarkers = {};
+    let currentMapView = "national";
+    let activeBriefData = null;
+
+    /* ==========================================================================
+       PRIORITY SCORING FORMULA
+       Formula: 50% normalized request volume + 35% normalized infra gap + 15% normalized under-investment
+       ========================================================================== */
+    function calculateAllScores() {
+      // Find min & max across all districts and sectors for rigorous normalization
+      let minReq = Infinity, maxReq = -Infinity;
+      let minGap = Infinity, maxGap = -Infinity;
+      let minUnderInv = Infinity, maxUnderInv = -Infinity;
+
+      DISTRICTS.forEach(d => {
+        Object.keys(d.sectors).forEach(secKey => {
+          const s = d.sectors[secKey];
+          if (s.requests < minReq) minReq = s.requests;
+          if (s.requests > maxReq) maxReq = s.requests;
+
+          const gap = 100 - s.infra;
+          if (gap < minGap) minGap = gap;
+          if (gap > maxGap) maxGap = gap;
+
+          const deficit = Math.max(0, s.requiredInv - s.plannedInv);
+          if (deficit < minUnderInv) minUnderInv = deficit;
+          if (deficit > maxUnderInv) maxUnderInv = deficit;
+        });
+      });
+
+      // Avoid division by zero
+      if (maxReq === minReq) maxReq = minReq + 1;
+      if (maxGap === minGap) maxGap = minGap + 1;
+      if (maxUnderInv === minUnderInv) maxUnderInv = minUnderInv + 1;
+
+      const scoredProjects = [];
+
+      DISTRICTS.forEach(d => {
+        let maxDistrictScore = 0;
+        let topSectorForDistrict = null;
+
+        Object.keys(d.sectors).forEach(secKey => {
+          const s = d.sectors[secKey];
+          const normReq = ((s.requests - minReq) / (maxReq - minReq)) * 100;
+          const normGap = (( (100 - s.infra) - minGap) / (maxGap - minGap)) * 100;
+          const deficit = Math.max(0, s.requiredInv - s.plannedInv);
+          const normUnderInv = ((deficit - minUnderInv) / (maxUnderInv - minUnderInv)) * 100;
+
+          // Official 50% - 35% - 15% Formula
+          const finalScore = (0.50 * normReq) + (0.35 * normGap) + (0.15 * normUnderInv);
+          const roundedScore = Number(finalScore.toFixed(1));
+
+          s.score = roundedScore;
+          s.deficitCr = Number(deficit.toFixed(1));
+
+          const projectItem = {
+            districtId: d.id,
+            districtName: d.name,
+            state: d.state,
+            category: secKey,
+            score: roundedScore,
+            requests: s.requests,
+            infra: s.infra,
+            plannedInv: s.plannedInv,
+            requiredInv: s.requiredInv,
+            deficitCr: Number(deficit.toFixed(1)),
+            clusterTitle: s.clusterTitle,
+            lat: d.lat,
+            lng: d.lng,
+            population: d.population,
+            components: {
+              reqComp: Number((0.50 * normReq).toFixed(1)),
+              gapComp: Number((0.35 * normGap).toFixed(1)),
+              invComp: Number((0.15 * normUnderInv).toFixed(1))
+            }
+          };
+
+          scoredProjects.push(projectItem);
+
+          if (roundedScore > maxDistrictScore) {
+            maxDistrictScore = roundedScore;
+            topSectorForDistrict = projectItem;
+          }
+        });
+
+        d.topSector = topSectorForDistrict;
+        d.compositeScore = maxDistrictScore;
+      });
+
+      scoredProjects.sort((a, b) => b.score - a.score);
+      return scoredProjects;
+    }
+
+    /* ==========================================================================
+       MAP INITIALIZATION & MARKER RENDERING
+       ========================================================================== */
+    function initMap() {
+      // Center coordinates of India
+      mapInstance = L.map('india-map', {
+        center: [22.8, 80.5],
+        zoom: 5,
+        minZoom: 4,
+        maxZoom: 9
+      });
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Awaaz Setu DPI'
+      }).addTo(mapInstance);
+
+      renderMapMarkers();
+    }
+
+    function getMarkerColor(score) {
+      if (score >= 70) return '#e53e3e'; // Red (High Priority)
+      if (score >= 45) return '#dd6b20'; // Amber (Medium)
+      return '#38a169'; // Green (Lower)
+    }
+
+    function renderMapMarkers() {
+      if (!mapInstance) return;
+
+      // Clear existing markers
+      Object.values(districtMarkers).forEach(m => mapInstance.removeLayer(m));
+      districtMarkers = {};
+
+      DISTRICTS.forEach(d => {
+        const top = d.topSector;
+        const color = getMarkerColor(top.score);
+        // Radius between 12 and 24 px based on score
+        const radius = Math.max(12, Math.min(24, Math.round(10 + (top.score / 6))));
+
+        const marker = L.circleMarker([d.lat, d.lng], {
+          radius: radius,
+          fillColor: color,
+          color: '#ffffff',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.85
+        }).addTo(mapInstance);
+
+        const popupContent = `
+          <div style="font-family: var(--font-family); min-width: 200px; padding: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 6px;">
+              <strong style="color: #1e3a8a; font-size: 0.95rem;">${d.name}, ${d.state}</strong>
+              <span style="background: ${color}; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.72rem; font-weight: 700;">${top.score}/100</span>
+            </div>
+            <div style="font-size: 0.8rem; margin-bottom: 4px;">
+              <strong>Top Priority:</strong> ${SECTOR_ICONS[top.category] || ''} ${top.category}
+            </div>
+            <div style="font-size: 0.76rem; color: #475569; margin-bottom: 6px;">
+              ${top.clusterTitle}
+            </div>
+            <div style="background: #f8fafc; padding: 6px; border-radius: 4px; font-size: 0.75rem; margin-bottom: 8px;">
+              <div>• Citizen Signals: <strong>${top.requests}</strong></div>
+              <div>• Infra Index: <strong>${top.infra}/100</strong> (Gap: ${100 - top.infra}%)</div>
+              <div>• Unfunded Deficit: <strong>₹${top.deficitCr} Cr</strong></div>
+            </div>
+            <button onclick="requestPolicyBriefFor('${d.name}', '${top.category}')" style="width: 100%; background: #1e3a8a; color: white; border: none; padding: 5px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
+              ⚡ Generate Policy Brief
+            </button>
+          </div>
+        `;
+
+        marker.bindPopup(popupContent);
+        districtMarkers[d.id] = marker;
+      });
+    }
+
+    /* Map View Toggle: National vs Federated Pairs */
+    function setMapView(view) {
+      currentMapView = view;
+      document.getElementById('view-national').classList.remove('active');
+      document.getElementById('view-arid').classList.remove('active');
+      document.getElementById('view-tribal').classList.remove('active');
+      const fedBox = document.getElementById('federated-box');
+      const compContent = document.getElementById('comparison-content');
+
+      if (view === 'national') {
+        document.getElementById('view-national').classList.add('active');
+        fedBox.classList.remove('active');
+        mapInstance.flyTo([22.8, 80.5], 5, { duration: 1.2 });
+      } else if (view === 'arid') {
+        document.getElementById('view-arid').classList.add('active');
+        fedBox.classList.add('active');
+
+        // Pair: Barmer (West/RJ) & Ramanathapuram (South/TN)
+        const barmer = DISTRICTS.find(d => d.id === 'barmer');
+        const ramnad = DISTRICTS.find(d => d.id === 'ramanathapuram');
+        const bounds = L.latLngBounds([ [barmer.lat, barmer.lng], [ramnad.lat, ramnad.lng] ]);
+        mapInstance.fitBounds(bounds, { padding: [60, 60], maxZoom: 6 });
+
+        compContent.innerHTML = `
+          <div class="comparison-col">
+            <strong style="color: #1e3a8a; font-size: 0.9rem;">🏜️ Barmer (Rajasthan - West)</strong>
+            <div style="font-size: 0.76rem; color: #475569; margin: 4px 0 8px 0;">Desert Arid Zone • Population: 2.6M</div>
+            <div style="background: #f8fafc; padding: 6px; border-radius: 4px; font-size: 0.78rem;">
+              <div>• Top Sector: <strong>Water</strong> (Score: ${barmer.sectors.Water.score})</div>
+              <div>• Signals: <strong>${barmer.sectors.Water.requests}</strong></div>
+              <div>• Infra Gap: <strong>${100 - barmer.sectors.Water.infra}%</strong> (Index: ${barmer.sectors.Water.infra})</div>
+              <div>• Deficit: <strong>₹${barmer.sectors.Water.deficitCr} Cr</strong></div>
+              <div style="margin-top: 4px; font-size: 0.72rem; color: #64748b;">Key Pattern: Inland groundwater salinity & dried deep borewells.</div>
+            </div>
+          </div>
+          <div class="comparison-col">
+            <strong style="color: #1e3a8a; font-size: 0.9rem;">🌊 Ramanathapuram (Tamil Nadu - South)</strong>
+            <div style="font-size: 0.76rem; color: #475569; margin: 4px 0 8px 0;">Coastal Drought Zone • Population: 1.4M</div>
+            <div style="background: #f8fafc; padding: 6px; border-radius: 4px; font-size: 0.78rem;">
+              <div>• Top Sector: <strong>Water</strong> (Score: ${ramnad.sectors.Water.score})</div>
+              <div>• Signals: <strong>${ramnad.sectors.Water.requests}</strong></div>
+              <div>• Infra Gap: <strong>${100 - ramnad.sectors.Water.infra}%</strong> (Index: ${ramnad.sectors.Water.infra})</div>
+              <div>• Deficit: <strong>₹${ramnad.sectors.Water.deficitCr} Cr</strong></div>
+              <div style="margin-top: 4px; font-size: 0.72rem; color: #64748b;">Key Pattern: Seawater intrusion into domestic wells.</div>
+            </div>
+          </div>
+        `;
+      } else if (view === 'tribal') {
+        document.getElementById('view-tribal').classList.add('active');
+        fedBox.classList.add('active');
+
+        // Pair: Dantewada (Central/CG) & Rayagada (East/OD)
+        const dante = DISTRICTS.find(d => d.id === 'dantewada');
+        const raya = DISTRICTS.find(d => d.id === 'rayagada');
+        const bounds = L.latLngBounds([ [dante.lat, dante.lng], [raya.lat, raya.lng] ]);
+        mapInstance.fitBounds(bounds, { padding: [60, 60], maxZoom: 6 });
+
+        compContent.innerHTML = `
+          <div class="comparison-col">
+            <strong style="color: #1e3a8a; font-size: 0.9rem;">🌲 Dantewada (Chhattisgarh - Central)</strong>
+            <div style="font-size: 0.76rem; color: #475569; margin: 4px 0 8px 0;">Aspirational Tribal Forest Belt • Pop: 0.5M</div>
+            <div style="background: #f8fafc; padding: 6px; border-radius: 4px; font-size: 0.78rem;">
+              <div>• Top Sector: <strong>Roads</strong> (Score: ${dante.sectors.Roads.score})</div>
+              <div>• Signals: <strong>${dante.sectors.Roads.requests}</strong></div>
+              <div>• Infra Gap: <strong>${100 - dante.sectors.Roads.infra}%</strong> (Index: ${dante.sectors.Roads.infra})</div>
+              <div>• Deficit: <strong>₹${dante.sectors.Roads.deficitCr} Cr</strong></div>
+              <div style="margin-top: 4px; font-size: 0.72rem; color: #64748b;">Key Pattern: Unpaved tracks blocking access to healthcare.</div>
+            </div>
+          </div>
+          <div class="comparison-col">
+            <strong style="color: #1e3a8a; font-size: 0.9rem;">⛰️ Rayagada (Odisha - East)</strong>
+            <div style="font-size: 0.76rem; color: #475569; margin: 4px 0 8px 0;">Tribal Hill Sub-Division • Pop: 1.0M</div>
+            <div style="background: #f8fafc; padding: 6px; border-radius: 4px; font-size: 0.78rem;">
+              <div>• Top Sector: <strong>Health</strong> (Score: ${raya.sectors.Health.score})</div>
+              <div>• Signals: <strong>${raya.sectors.Health.requests}</strong></div>
+              <div>• Infra Gap: <strong>${100 - raya.sectors.Health.infra}%</strong> (Index: ${raya.sectors.Health.infra})</div>
+              <div>• Deficit: <strong>₹${raya.sectors.Health.deficitCr} Cr</strong></div>
+              <div style="margin-top: 4px; font-size: 0.72rem; color: #64748b;">Key Pattern: Doctor vacancies & maternal clinic gaps.</div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    /* ==========================================================================
+       RENDER TOP 5 RANKED PROJECTS (THE CORE DPI OUTPUT)
+       ========================================================================== */
+    function renderRankedProjects(scoredProjects) {
+      const container = document.getElementById('ranked-projects-list');
+      const top5 = scoredProjects.slice(0, 5);
+
+      container.innerHTML = top5.map((proj, idx) => {
+        const rank = idx + 1;
+        const icon = SECTOR_ICONS[proj.category] || '📌';
+        const scoreClass = proj.score >= 70 ? 'score-high' : (proj.score >= 45 ? 'score-med' : 'score-low');
+        const gap = 100 - proj.infra;
+
+        // Data-driven explanation
+        const whyText = `Severe ${proj.category.toLowerCase()} deficit (${proj.infra}/100 infrastructure index) compounded by ${proj.requests} aggregated citizen signals and a ₹${proj.deficitCr} Cr capital deficit under current allocations.`;
+
+        return `
+          <div class="project-card" id="project-card-${proj.districtId}-${proj.category.toLowerCase()}">
+            <div class="project-card-header">
+              <div class="project-rank-title">
+                <div class="rank-circle rank-${rank}">#${rank}</div>
+                <div>
+                  <div class="project-title-text">${icon} ${proj.category} • ${proj.districtName}</div>
+                  <span class="project-state-tag">${proj.state} (${proj.population} Pop) • Aspirational District</span>
+                </div>
+              </div>
+              <div class="project-score-badge">
+                <span class="score-value ${scoreClass}">${proj.score}</span>
+                <span class="score-label">Priority Index</span>
+              </div>
+            </div>
+
+            <div class="project-metrics-strip">
+              <div class="metric-item">
+                <span>Citizen Demand:</span>
+                <strong>${proj.requests} Signals</strong>
+              </div>
+              <div class="metric-item">
+                <span>Infra Readiness:</span>
+                <strong>${proj.infra}/100 (${gap}% Gap)</strong>
+              </div>
+              <div class="metric-item">
+                <span>Planned Budget:</span>
+                <strong>₹${proj.plannedInv} Cr</strong>
+              </div>
+              <div class="metric-item">
+                <span>Capital Deficit:</span>
+                <strong style="color: #dc2626;">₹${proj.deficitCr} Cr</strong>
+              </div>
+            </div>
+
+            <div class="project-why-text">
+              <strong>Data-Driven Rationale:</strong> ${whyText}
+            </div>
+
+            <div class="project-actions">
+              <div class="cluster-preview-text">
+                <span>📍 Cluster:</span> <em>"${proj.clusterTitle}"</em>
+              </div>
+              <button class="brief-trigger-btn" onclick="requestPolicyBriefFor('${proj.districtName}', '${proj.category}')">
+                <span>⚡ Generate Policy Brief</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /* Render coverage table */
+    function renderDistrictTable(scoredProjects) {
+      const tbody = document.getElementById('district-table-body');
+      tbody.innerHTML = DISTRICTS.map(d => {
+        const top = d.topSector;
+        const scoreClass = top.score >= 70 ? 'score-high' : (top.score >= 45 ? 'score-med' : 'score-low');
+        return `
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 6px 10px;">
+              <strong>${d.name}</strong>, <span style="color: #64748b;">${d.state}</span>
+            </td>
+            <td style="padding: 6px 8px;">
+              ${SECTOR_ICONS[top.category] || ''} ${top.category}
+            </td>
+            <td style="padding: 6px 8px;">
+              <strong>${top.requests}</strong>
+            </td>
+            <td style="padding: 6px 8px;">
+              <span class="${scoreClass}" style="font-weight: 700; cursor: pointer;" onclick="focusDistrict('${d.id}')">
+                ${top.score} →
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function focusDistrict(districtId) {
+      const marker = districtMarkers[districtId];
+      if (marker && mapInstance) {
+        mapInstance.flyTo(marker.getLatLng(), 7, { duration: 1.0 });
+        marker.openPopup();
+      }
+    }
+
+    /* ==========================================================================
+       LANGUAGE SELECTION & ONE-CLICK SAMPLES
+       ========================================================================== */
+    document.querySelectorAll('.lang-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.lang-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedLanguage = btn.getAttribute('data-lang');
+        selectedLocale = btn.getAttribute('data-locale');
+
+        const placeholders = {
+          Hindi: "अपनी नागरिक समस्या यहाँ लिखें या बोलें (जैसे: पानी की समस्या, टूटी सड़क, स्कूल, अस्पताल)...",
+          Tamil: "உங்கள் கோரிக்கையை உள்ளிடவும் அல்லது பேசவும்...",
+          Bengali: "আপনার অভিযোগ বা উন্নয়নমূলক দাবি এখানে লিখুন বা বলুন...",
+          Marathi: "तुमची समस्या किंवा मागणी येथे लिहा किंवा बोला...",
+          English: "Type or speak your citizen development request..."
+        };
+        document.getElementById('citizen-text').placeholder = placeholders[selectedLanguage] || placeholders.English;
+      });
+    });
+
+    function loadSample(key) {
+      const sample = SAMPLES[key];
+      if (!sample) return;
+
+      // Update active language chip
+      document.querySelectorAll('.lang-chip').forEach(b => {
+        if (b.getAttribute('data-lang') === sample.lang) {
+          b.classList.add('active');
+          selectedLanguage = sample.lang;
+          selectedLocale = sample.locale;
+        } else {
+          b.classList.remove('active');
+        }
+      });
+
+      const txt = document.getElementById('citizen-text');
+      txt.value = sample.text;
+      updateCharCounter();
+      showToast(`Loaded ${sample.lang} sample for ${sample.districtHint}! Click 'Run Gemini Pipeline' to submit.`);
+    }
+
+    function updateCharCounter() {
+      const len = document.getElementById('citizen-text').value.length;
+      document.getElementById('char-counter').textContent = `${len} characters`;
+    }
+    document.getElementById('citizen-text').addEventListener('input', updateCharCounter);
+
+    /* ==========================================================================
+       WEB SPEECH API INTEGRATION (VOICE INPUT)
+       ========================================================================== */
+    let recognition = null;
+    let isRecording = false;
+
+    function initSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        document.getElementById('speech-support-label').textContent = 'Web Speech not supported in this browser';
+        document.getElementById('mic-btn').disabled = true;
+        document.getElementById('mic-btn').title = 'Speech recognition requires Chrome or Chromium-based browser';
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+
+      recognition.onstart = () => {
+        isRecording = true;
+        const btn = document.getElementById('mic-btn');
+        btn.classList.add('recording');
+        document.getElementById('mic-label').textContent = 'Listening...';
+        document.getElementById('mic-status-hint').textContent = `Speak in ${selectedLanguage} (${selectedLocale})`;
+      };
+
+      recognition.onresult = (event) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          transcript += event.results[i][0].transcript;
+        }
+        document.getElementById('citizen-text').value = transcript;
+        updateCharCounter();
+      };
+
+      recognition.onerror = (event) => {
+        console.warn('Speech recognition error:', event.error);
+        stopSpeechRecognition();
+        showToast(`Voice input notice: ${event.error}. You can also type or use sample buttons.`);
+      };
+
+      recognition.onend = () => {
+        stopSpeechRecognition();
+      };
+    }
+
+    function toggleSpeechRecognition() {
+      if (!recognition) {
+        initSpeechRecognition();
+      }
+      if (!recognition) return;
+
+      if (isRecording) {
+        recognition.stop();
+      } else {
+        recognition.lang = selectedLocale;
+        try {
+          recognition.start();
+        } catch (e) {
+          console.warn('Could not start recognition:', e);
+        }
+      }
+    }
+
+    function stopSpeechRecognition() {
+      isRecording = false;
+      const btn = document.getElementById('mic-btn');
+      btn.classList.remove('recording');
+      document.getElementById('mic-label').textContent = 'Speak (Voice)';
+      document.getElementById('mic-status-hint').textContent = 'Chrome / Edge Web Speech Ready';
+    }
+
+    /* ==========================================================================
+       SUBMIT CITIZEN REQUEST: 4-STAGE GEMINI AI PIPELINE
+       ========================================================================== */
+    async function processCitizenSubmission() {
+      const text = document.getElementById('citizen-text').value.trim();
+      if (!text) {
+        alert("Please enter citizen text or click one of the 4 test samples.");
+        return;
+      }
+
+      const submitBtn = document.getElementById('submit-analysis-btn');
+      const submitText = document.getElementById('submit-btn-text');
+      const spinner = document.getElementById('submit-spinner');
+      const feedbackCard = document.getElementById('analysis-feedback');
+
+      submitBtn.disabled = true;
+      spinner.style.display = 'inline-block';
+      submitText.textContent = "Stage 1/4: Multilingual Translation & Classification...";
+
+      try {
+        // Call backend /api/analyze
+        const response = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text: text,
+            language: selectedLanguage
+          })
+        });
+
+        const result = await response.json();
+
+        // Update AI status badge based on provider
+        if (result.aiProvider && result.aiProvider.includes('gemini')) {
+          document.getElementById('ai-status-text').textContent = "Gemini 2.5 Flash Online";
+          document.getElementById('ai-indicator').style.background = "#22c55e";
+          document.getElementById('ai-indicator').style.boxShadow = "0 0 8px #22c55e";
+        } else {
+          document.getElementById('ai-status-text').textContent = "Offline Fallback Engine";
+          document.getElementById('ai-indicator').style.background = "#eab308";
+          document.getElementById('ai-indicator').style.boxShadow = "0 0 8px #eab308";
+        }
+
+        submitText.textContent = "Stage 3/4: Clustering Demand Signals...";
+
+        // Extract outputs
+        const classification = result.classification || { category: "Water", district: "Barmer", urgency: "High" };
+        const clustering = result.clustering || { isMerged: true, clusterTitle: "Aggregated Demand Signal", message: "Merged signal." };
+        const transcription = result.transcription || { translatedEnglish: text, detectedLanguage: selectedLanguage };
+
+        // Update local dataset reactively!
+        const targetDistrict = DISTRICTS.find(d => d.name.toLowerCase() === classification.district.toLowerCase()) || DISTRICTS[0];
+        const categoryKey = classification.category || "Water";
+
+        if (targetDistrict.sectors[categoryKey]) {
+          targetDistrict.sectors[categoryKey].requests += 1;
+        }
+
+        // Recalculate scores & re-render in real time!
+        const updatedScores = calculateAllScores();
+        renderRankedProjects(updatedScores);
+        renderMapMarkers();
+        renderDistrictTable(updatedScores);
+
+        // Display feedback banner
+        feedbackCard.classList.add('active', 'highlight');
+        document.getElementById('res-district-sector').textContent = `${SECTOR_ICONS[categoryKey] || ''} ${categoryKey} • ${targetDistrict.name}, ${targetDistrict.state}`;
+        document.getElementById('res-urgency-badge').textContent = `${classification.urgency} Urgency`;
+        document.getElementById('res-urgency-badge').className = `badge-pill badge-${(classification.urgency || 'high').toLowerCase()}`;
+        document.getElementById('res-translation').textContent = `Translated: "${transcription.translatedEnglish}"`;
+        document.getElementById('res-cluster-msg').innerHTML = `
+          <strong>🔗 Demand Clustering:</strong> ${clustering.message}
+          <div style="margin-top: 4px; font-size: 0.76rem; color: #1e3a8a;">
+            Priority Score for <strong>${targetDistrict.name} ${categoryKey}</strong> updated to <strong>${targetDistrict.sectors[categoryKey].score}/100</strong>!
+          </div>
+        `;
+
+        // Highlight the updated project card
+        const cardId = `project-card-${targetDistrict.id}-${categoryKey.toLowerCase()}`;
+        const cardElem = document.getElementById(cardId);
+        if (cardElem) {
+          cardElem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          cardElem.style.borderColor = "#22c55e";
+          cardElem.style.boxShadow = "0 0 0 3px rgba(34, 197, 94, 0.2)";
+          setTimeout(() => {
+            cardElem.style.borderColor = "";
+            cardElem.style.boxShadow = "";
+          }, 3000);
+        }
+
+        // Focus map
+        focusDistrict(targetDistrict.id);
+        showToast(`Demand signal merged into ${targetDistrict.name} ${categoryKey}! Priority score recalculated.`);
+
+      } catch (err) {
+        console.error("Analysis failed:", err);
+        showToast("Error processing request. Falling back to local offline updates.");
+      } finally {
+        submitBtn.disabled = false;
+        spinner.style.display = 'none';
+        submitText.textContent = "🚀 Run Gemini Pipeline (Classify + Cluster + Re-score)";
+      }
+    }
+
+    /* ==========================================================================
+       POLICY BRIEF GENERATION (GEMINI AI MEMORANDUM)
+       ========================================================================== */
+    async function requestPolicyBriefFor(districtName, category) {
+      const modal = document.getElementById('brief-modal');
+      const loading = document.getElementById('brief-loading');
+      const content = document.getElementById('brief-content');
+      const providerBadge = document.getElementById('brief-ai-provider-badge');
+
+      modal.classList.add('active');
+      loading.style.display = 'block';
+      content.style.display = 'none';
+      content.textContent = '';
+
+      const district = DISTRICTS.find(d => d.name.toLowerCase() === districtName.toLowerCase()) || DISTRICTS[0];
+      const sector = district.sectors[category] || district.sectors["Water"];
+
+      // Find current rank
+      const allScored = calculateAllScores();
+      const currentRank = allScored.findIndex(p => p.districtName === district.name && p.category === category) + 1 || 1;
+
+      activeBriefData = {
+        district: district.name,
+        state: district.state,
+        category: category,
+        score: sector.score,
+        rank: currentRank,
+        requestCount: sector.requests,
+        infraIndex: sector.infra,
+        plannedInvestment: sector.plannedInv,
+        underinvestmentGap: sector.deficitCr,
+        clusterTitle: sector.clusterTitle,
+        urgency: "High",
+        population: district.population
+      };
+
+      try {
+        const response = await fetch('/api/brief', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(activeBriefData)
+        });
+
+        const data = await response.json();
+        loading.style.display = 'none';
+        content.style.display = 'block';
+
+        if (data.policyBrief) {
+          content.textContent = data.policyBrief;
+          providerBadge.textContent = data.aiProvider && data.aiProvider.includes('gemini')
+            ? `Generated via Google Gemini 2.5 Flash (${new Date().toLocaleTimeString()})`
+            : `Generated via Policy Synthesis Engine (${new Date().toLocaleTimeString()})`;
+        } else {
+          content.textContent = "Unable to generate policy brief at this time.";
+        }
+      } catch (err) {
+        console.error("Policy brief error:", err);
+        loading.style.display = 'none';
+        content.style.display = 'block';
+        content.textContent = `GOVERNMENT OF ${district.state.toUpperCase()}
+OFFICE OF THE DISTRICT PLANNING COMMITTEE
+MEMORANDUM FOR SPECIAL CAPITAL ALLOCATION
+
+DATE: ${new Date().toLocaleDateString('en-IN')}
+TO: Principal Secretary, State Planning Board & District Collector, ${district.name}
+SUBJECT: Capital Allocation for ${category.toUpperCase()} (Score: ${sector.score}/100 | Rank #${currentRank})
+
+Decentralized demand aggregation on the Awaaz Setu platform registers ${sector.requests} verified citizen requests clustered around "${sector.clusterTitle}". The district infrastructure index stands at ${sector.infra}/100 (${100 - sector.infra}% deficit).
+
+Planned budget of ₹${sector.plannedInv} Cr leaves an unfunded deficit of ₹${sector.deficitCr} Cr. Immediate invocation of national mission funding is recommended.`;
+        providerBadge.textContent = "Generated via Offline Synthesizer";
+      }
+    }
+
+    function closeBriefModal() {
+      document.getElementById('brief-modal').classList.remove('active');
+    }
+
+    function copyBriefText() {
+      const text = document.getElementById('brief-content').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Policy Memorandum copied to clipboard!");
+      }).catch(() => {
+        showToast("Please copy manually from the memo box.");
+      });
+    }
+
+    function downloadBriefText() {
+      const text = document.getElementById('brief-content').textContent;
+      const district = activeBriefData ? activeBriefData.district : 'district';
+      const sector = activeBriefData ? activeBriefData.category : 'policy';
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `AwaazSetu_PolicyBrief_${district}_${sector}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("Downloaded policy memorandum file!");
+    }
+
+    function printBriefText() {
+      const text = document.getElementById('brief-content').textContent;
+      const printWin = window.open('', '', 'width=800,height=600');
+      printWin.document.write(`<pre style="font-family: monospace; white-space: pre-wrap; padding: 20px; font-size: 14px;">${text}</pre>`);
+      printWin.document.close();
+      printWin.focus();
+      printWin.print();
+      printWin.close();
+    }
+
+    /* Formula modal controls */
+    function openFormulaModal() {
+      document.getElementById('formula-modal').classList.add('active');
+    }
+
+    function closeFormulaModal() {
+      document.getElementById('formula-modal').classList.remove('active');
+    }
+
+    /* Toast notification */
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    }
+
+    /* Close modals when clicking outside */
+    window.addEventListener('click', (e) => {
+      const briefModal = document.getElementById('brief-modal');
+      const formulaModal = document.getElementById('formula-modal');
+      if (e.target === briefModal) closeBriefModal();
+      if (e.target === formulaModal) closeFormulaModal();
+    });
+
+    /* ==========================================================================
+       BOOTSTRAP APPLICATION
+       ========================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. Calculate initial scores
+      const initialScores = calculateAllScores();
+
+      // 2. Initialize Leaflet map
+      initMap();
+
+      // 3. Render Top 5 Projects
+      renderRankedProjects(initialScores);
+
+      // 4. Render district coverage table
+      renderDistrictTable(initialScores);
+
+      // 5. Initialize Web Speech API
+      initSpeechRecognition();
+
+      // 6. Check backend AI status
+      fetch('/api/analyze')
+        .then(r => r.json())
+        .then(status => {
+          if (status.geminiKeyConfigured) {
+            document.getElementById('ai-status-text').textContent = "Gemini 2.5 Flash Online";
+            document.getElementById('ai-indicator').style.background = "#22c55e";
+            document.getElementById('ai-indicator').style.boxShadow = "0 0 8px #22c55e";
+          } else {
+            document.getElementById('ai-status-text').textContent = "Offline Fallback Ready";
+            document.getElementById('ai-indicator').style.background = "#eab308";
+            document.getElementById('ai-indicator').style.boxShadow = "0 0 8px #eab308";
+          }
+        })
+        .catch(() => {
+          document.getElementById('ai-status-text').textContent = "Offline Client Engine";
+        });
+    });
+  </script>
+</body>
+</html>

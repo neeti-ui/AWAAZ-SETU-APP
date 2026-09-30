@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/analyze", "destination": "/api/analyze.js" },
+    { "source": "/api/brief", "destination": "/api/brief.js" },
+    { "source": "/(.*)", "destination": "/$1" }
+  ]
+}

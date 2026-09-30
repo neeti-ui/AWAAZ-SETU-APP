@@ -1,0 +1,23 @@
+{
+  "name": "awaaz-setu",
+  "version": "1.0.0",
+  "description": "AI-Powered Citizen Demand Aggregation & Infrastructure Prioritization Platform for Indian Public Goods",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "digital-public-infrastructure",
+    "gemini-ai",
+    "governance",
+    "bhashini",
+    "india-stack",
+    "hackathon"
+  ],
+  "author": "Awaaz Setu Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
